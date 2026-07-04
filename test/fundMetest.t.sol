@@ -8,7 +8,7 @@ import {DeployFundMe} from "../script/DeployFundMe.s.sol";
 contract FundMeTest is Test {
     FundMe fundMe;
     address fakeUser = makeAddr("fakeUser");
-    uint SEND_value = 0.1 ether;
+    uint256 SEND_value = 0.1 ether;
 
     function setUp() external {
         DeployFundMe deployFundMe = new DeployFundMe();
@@ -63,8 +63,8 @@ contract FundMeTest is Test {
     }
 
     function testWithdrawFromSingleFunder() public {
-        uint contractBalance = address(fundMe).balance;
-        uint ownerBalance = fundMe.getOwner().balance;
+        uint256 contractBalance = address(fundMe).balance;
+        uint256 ownerBalance = fundMe.getOwner().balance;
         vm.startPrank(fundMe.getOwner());
         fundMe.withdraw();
         vm.assertEq(contractBalance, 0);
@@ -72,8 +72,8 @@ contract FundMeTest is Test {
 
     function testWithdrawFromMultipleFunder() public fakeFunding {
         uint160 funderIndex = 10;
-        uint startContractBalance = address(fundMe).balance;
-        uint ownerBalance = fundMe.getOwner().balance;
+        uint256 startContractBalance = address(fundMe).balance;
+        uint256 ownerBalance = fundMe.getOwner().balance;
         for (uint160 i = 0; i < 10; i++) {
             hoax(address(i), SEND_value);
             fundMe.fund{value: SEND_value}();
@@ -86,8 +86,8 @@ contract FundMeTest is Test {
 
     function testWithdrawFromMultipleFunderCheaper() public fakeFunding {
         uint160 funderIndex = 10;
-        uint startContractBalance = address(fundMe).balance;
-        uint ownerBalance = fundMe.getOwner().balance;
+        uint256 startContractBalance = address(fundMe).balance;
+        uint256 ownerBalance = fundMe.getOwner().balance;
         for (uint160 i = 0; i < 10; i++) {
             hoax(address(i), SEND_value);
             fundMe.fund{value: SEND_value}();

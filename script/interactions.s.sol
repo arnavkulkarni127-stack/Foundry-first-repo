@@ -6,10 +6,7 @@ import {DevOpsTools} from "../lib/foundry-devops/src/DevOpsTools.sol";
 
 contract FundFundMe is Script {
     function run() external {
-        address recentlyDeployed = DevOpsTools.get_most_recent_deployment(
-            "FundMe",
-            block.chainid
-        );
+        address recentlyDeployed = DevOpsTools.get_most_recent_deployment("FundMe", block.chainid);
         fundFundMe(recentlyDeployed);
         // call fundFundMe(...)
     }
@@ -25,10 +22,7 @@ contract FundFundMe is Script {
 
 contract WithdrawFundMe is Script {
     function run() external {
-        address recentlyDeployed = DevOpsTools.get_most_recent_deployment(
-            "FundMe",
-            block.chainid
-        );
+        address recentlyDeployed = DevOpsTools.get_most_recent_deployment("FundMe", block.chainid);
         withdrawFundMe(recentlyDeployed);
     }
 

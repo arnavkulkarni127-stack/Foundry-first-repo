@@ -5,7 +5,6 @@ pragma solidity ^0.8.18;
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import {PriceConverter} from "./PriceConverter.sol";
 
-
 error NotOwner();
 
 contract FundMe {
@@ -22,7 +21,8 @@ contract FundMe {
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeed);
     }
-    function getOwner() public returns(address){
+
+    function getOwner() public returns (address) {
         return i_owner;
     }
 
@@ -34,7 +34,6 @@ contract FundMe {
     }
 
     function getVersion() public view returns (uint256) {
-        
         return s_priceFeed.version();
     }
 
@@ -43,43 +42,37 @@ contract FundMe {
         if (msg.sender != i_owner) revert NotOwner();
         _;
     }
-     function cheaperWithdraw() public onlyOwner{
+
+    function cheaperWithdraw() public onlyOwner {
         uint256 fundersLength = s_funders.length;
-         for (uint256 funderIndex = 0; funderIndex < fundersLength; funderIndex++) {
+        for (uint256 funderIndex = 0; funderIndex < fundersLength; funderIndex++) {
             address funder = s_funders[funderIndex];
             addressToAmountFunded[funder] = 0;
         }
         s_funders = new address[](0);
-        
+
         (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Call failed");
-     }
+    }
+
     function withdraw() public onlyOwner {
         for (uint256 funderIndex = 0; funderIndex < s_funders.length; funderIndex++) {
             address funder = s_funders[funderIndex];
             addressToAmountFunded[funder] = 0;
         }
         s_funders = new address[](0);
-        
+
         (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Call failed");
     }
-    function getAddressToAmountFunded(address fundingAddress)
-    public
-    view
-    returns (uint256)
-{
-    return addressToAmountFunded[fundingAddress];
-}
 
-function getFunder(uint256 index)
-    public
-    view
-    returns (address)
-{
-    return s_funders[index];
-}
-  
+    function getAddressToAmountFunded(address fundingAddress) public view returns (uint256) {
+        return addressToAmountFunded[fundingAddress];
+    }
+
+    function getFunder(uint256 index) public view returns (address) {
+        return s_funders[index];
+    }
 
     fallback() external payable {
         fund();
